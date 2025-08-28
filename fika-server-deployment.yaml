@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fika-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fika-server
+  template:
+    metadata:
+      labels:
+        app: fika-server
+    spec:
+      containers:
+        - name: fika-server
+          image: ghcr.io/zhliau/fika-spt-server-docker:latest
+          ports:
+            - containerPort: 30697
+          env:
+            - name: INSTALL_FIKA
+              value: "false"
+            - name: LISTEN_ALL_NETWORKS
+              value: "true"
+            - name: ENABLE_PROFILE_BACKUP
+              value: "false"
+          volumeMounts:
+            - name: server-storage
+              mountPath: /opt/server
+      volumes:
+        - name: server-storage
+          hostPath:
+            path: /home/brennan/spt-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fika-server
+spec:
+  type: NodePort
+  selector:
+    app: fika-server
+  ports:
+    - protocol: TCP
+      port: 30697
+      targetPort: 30697
+      nodePort: 30697
