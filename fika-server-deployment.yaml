@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: fika-server
-          image: ghcr.io/zhliau/fika-spt-server-docker:3.11.3
+          image: ghcr.io/zhliau/fika-spt-server-docker:4.0.1
           ports:
             - containerPort: 30697
           env:
